@@ -24,7 +24,9 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = White90,
+    onPrimary = White90,
     secondary = Black100,
+    onSecondary = Black100,
     tertiary = Pink40,
 
     /* Other default colors to override
@@ -42,7 +44,7 @@ private val LightColorScheme = lightColorScheme(
 fun TaskTrackerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

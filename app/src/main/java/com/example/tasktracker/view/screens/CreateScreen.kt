@@ -1,16 +1,11 @@
 package com.example.tasktracker.view.screens
 
+import android.view.Gravity
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -21,13 +16,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.material3.TimePickerLayoutType
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -40,13 +30,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import java.lang.StringBuilder
+import com.example.tasktracker.view.pickers.AmPmTimePicker
+import com.example.tasktracker.view.pickers.TwentyFourHoursPicker
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import kotlin.time.Duration.Companion.milliseconds
 
 @Preview(showSystemUi = true)
 @Composable
@@ -75,8 +63,10 @@ fun CreateScreen() {
             label = { Text(text = "Task card title") },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.Black,
-                 focusedLabelColor = Color.Black,
+                focusedLabelColor = Color.Black,
                 focusedContainerColor = Color.White,
+
+                cursorColor = Color.Black,
 
                 disabledContainerColor = Color.White,
                 unfocusedContainerColor = Color.White
@@ -96,6 +86,8 @@ fun CreateScreen() {
                 focusedLabelColor = Color.Black,
                 focusedContainerColor = Color.White,
 
+                cursorColor = Color.Black,
+
                 disabledContainerColor = Color.White,
                 unfocusedContainerColor = Color.White
             )
@@ -108,9 +100,9 @@ fun CreateScreen() {
                 .weight(0.08f)
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
         ) {
-            Text("Save")
+            Text("Save", color = MaterialTheme.colorScheme.primary)
 
         }
     }
@@ -131,6 +123,7 @@ fun ColumnScope.Pickers() {
 
     val datePickerState = rememberDatePickerState()
     val timePickerState = rememberTimePickerState()
+
     val context = LocalContext.current
 
     //Date picker
@@ -138,8 +131,8 @@ fun ColumnScope.Pickers() {
         onClick = { showDatePicker.value = true },
         shape = RoundedCornerShape(18.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Black,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.primary
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -167,13 +160,17 @@ fun ColumnScope.Pickers() {
                                 timeInMillis = (System.currentTimeMillis() - 1000 * 60 * 60 * 24)
                             }
                             if (selectedDate.before(yesterdayDate)) {
-                                Toast.makeText(
+                                val toast = Toast.makeText(
                                     context,
                                     "Selected date should be today or further, please select again",
                                     Toast.LENGTH_LONG
-                                ).show()
+                                )
+                                toast.setGravity(Gravity.TOP, 0, 0)
+                                toast.show()
+
                             } else {
-                                val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                                val dateFormatter =
+                                    SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
                                 setDateStateText.value = dateFormatter.format(selectedDate.time)
                                 showDatePicker.value = false
                             }
@@ -192,13 +189,14 @@ fun ColumnScope.Pickers() {
         }
     }
 
+
     //Time picker
     Button(
         onClick = { showTimePicker.value = true },
         shape = RoundedCornerShape(18.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Black,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.primary
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -206,8 +204,19 @@ fun ColumnScope.Pickers() {
             .padding(vertical = 8.dp)
     ) {
         Text(text = setTimeStateText.value)
+
+        val hoursState = remember {
+            mutableStateOf("00")
+        }
+        val minutesState = remember {
+            mutableStateOf("00")
+        }
+        val timePeriodState = remember {
+            mutableStateOf("AM")
+        }
+
         if (showTimePicker.value) {
-            TimePickerDialog(
+            AmPmTimePicker(
                 onDismissRequest = { /*TODO*/ },
                 dismissButton = {
                     TextButton(
@@ -219,80 +228,16 @@ fun ColumnScope.Pickers() {
                 confirmButton = {
                     TextButton(
                         onClick = {
-
-                            timePickerState.hour
-                            timePickerState.minute
-                          val time = 2
-                            if( time < System.currentTimeMillis()){
-                                Toast.makeText(
-                                    context,
-                                    "Selected time should in future, please select again",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                            setTimeStateText.value =       timePickerState.hour.milliseconds.toString()
                             showTimePicker.value = false
-
                         }
                     ) { Text(text = "OK", color = MaterialTheme.colorScheme.secondary) }
                 },
-                content = {
-                    TimePicker(
-                         state = timePickerState,
-                        colors = TimePickerDefaults.colors(clockDialSelectedContentColor = MaterialTheme.colorScheme.secondary)
-                    )
-                }
+                hoursState = hoursState,
+                minutesState = minutesState,
+                timePeriod = timePeriodState
             )
-
+            setTimeStateText.value = "${hoursState.value}:${minutesState.value}"
         }
 
-    }
-}
-
-
-
-
-@Composable
-fun TimePickerDialog(
-    title: String = "Select Time",
-    onDismissRequest: () -> Unit,
-    dismissButton: @Composable (() -> Unit)? = null,
-    confirmButton: @Composable (() -> Unit),
-    containerColor: Color = MaterialTheme.colorScheme.surface,
-    content: @Composable () -> Unit,
-) {
-    Dialog(
-        onDismissRequest = onDismissRequest,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Surface(
-            shape = MaterialTheme.shapes.extraLarge,
-            tonalElevation = 6.dp,
-            modifier = Modifier
-                .width(IntrinsicSize.Min)
-                .height(IntrinsicSize.Min)
-                .background(shape = MaterialTheme.shapes.extraLarge, color = containerColor)
-        ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = title, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 20.dp), style = MaterialTheme.typography.labelMedium
-                )
-                content()
-                Row(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .fillMaxWidth()
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    dismissButton?.invoke()
-                    confirmButton()
-                }
-            }
-        }
     }
 }
