@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tasktracker.view.pickers.AmPmTimePicker
+import com.example.tasktracker.view.pickers.MyTimePicker
 import com.example.tasktracker.view.pickers.TwentyFourHoursPicker
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -205,18 +206,12 @@ fun ColumnScope.Pickers() {
     ) {
         Text(text = setTimeStateText.value)
 
-        val hoursState = remember {
-            mutableStateOf("00")
-        }
-        val minutesState = remember {
-            mutableStateOf("00")
-        }
-        val timePeriodState = remember {
-            mutableStateOf("AM")
-        }
 
         if (showTimePicker.value) {
-            AmPmTimePicker(
+            val timeState = remember{
+                mutableStateOf("-")
+            }
+            MyTimePicker(
                 onDismissRequest = { /*TODO*/ },
                 dismissButton = {
                     TextButton(
@@ -232,11 +227,10 @@ fun ColumnScope.Pickers() {
                         }
                     ) { Text(text = "OK", color = MaterialTheme.colorScheme.secondary) }
                 },
-                hoursState = hoursState,
-                minutesState = minutesState,
-                timePeriod = timePeriodState
+               timeState = timeState,
+                is24Hours = false
             )
-            setTimeStateText.value = "${hoursState.value}:${minutesState.value}"
+            setTimeStateText.value = timeState.value
         }
 
     }

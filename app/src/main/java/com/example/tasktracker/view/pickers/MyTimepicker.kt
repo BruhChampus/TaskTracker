@@ -37,24 +37,45 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.tasktracker.transformTime
 
-//TODO оставить либо как есть с этими hoursState и тд или сделать одну переменную и передавть ее
-//TODO также добавить композбл в которой чел будет в конструкторе передавааиь какой тип тайм пикера нужен is24hour
 
 @Composable
-fun MyTimePicker(){
-
+fun MyTimePicker(
+    title: String = "Select Time",
+    onDismissRequest: () -> Unit,
+    dismissButton: @Composable (() -> Unit)? = null,
+    confirmButton: @Composable (() -> Unit),
+    timeState: MutableState<String>,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    is24Hours:Boolean = true
+) {
+             when(is24Hours){
+                 true -> TwentyFourHoursPicker(title, onDismissRequest, dismissButton, confirmButton, timeState, containerColor)
+                 false -> AmPmTimePicker(title, onDismissRequest, dismissButton, confirmButton, timeState, containerColor)
+             }
 }
+
 @Composable
 fun TwentyFourHoursPicker(
     title: String = "Select Time",
     onDismissRequest: () -> Unit,
     dismissButton: @Composable (() -> Unit)? = null,
     confirmButton: @Composable (() -> Unit),
-    hoursState: MutableState<String>,
-    minutesState: MutableState<String>,
+    timeState: MutableState<String>,
     containerColor: Color = MaterialTheme.colorScheme.surface,
 ) {
+
+    val hoursState = remember {
+        mutableStateOf("00")
+    }
+
+    val minutesState = remember {
+        mutableStateOf("00")
+    }
+
+    timeState.value = "${hoursState.value} : ${minutesState.value}"
+
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -151,19 +172,31 @@ fun AmPmTimePicker(
     onDismissRequest: () -> Unit,
     dismissButton: @Composable (() -> Unit)? = null,
     confirmButton: @Composable (() -> Unit),
-    hoursState: MutableState<String>,
-    minutesState: MutableState<String>,
-    timePeriod: MutableState<String>,
+    timeState: MutableState<String>,
     containerColor: Color = MaterialTheme.colorScheme.surface,
 ) {
 
-    val hours =
-        listOf<String>("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
-    val minutes = ArrayList<String>()
-    for (i in 0..59 step 5) {
-        minutes.add(i.toString())
+    val hoursState = remember {
+        mutableStateOf("00")
     }
 
+    val minutesState = remember {
+        mutableStateOf("00")
+    }
+    val timePeriod = remember {
+        mutableStateOf("AM")
+    }
+
+    timeState.value = "${hoursState.value} : ${minutesState.value} ${timePeriod.value}"
+
+    val hours =
+        listOf("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
+
+    val minutes = ArrayList<String>()
+    for (i in 0..59 step 5) {
+
+        minutes.add(transformTime(i.toString()))
+    }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -185,16 +218,24 @@ fun AmPmTimePicker(
                     Text(text = title)
                     Row() {
                         Column() {
-                            MyDropDownMenu(options = hours, label = { Text(text = "Hours") })
+                            MyDropDownMenu(
+                                options = hours,
+                                label = { Text(text = "Hours") },
+                                optionState = hoursState
+                            )
                         }
                         Text(text = ":", fontSize = 56.sp)
                         Column() {
-                            MyDropDownMenu(options = minutes, label = { Text(text = "Minutes") })
+                            MyDropDownMenu(
+                                options = minutes,
+                                label = { Text(text = "Minutes") },
+                                optionState = minutesState
+                            )
                         }
                     }
                     Row(modifier = Modifier.padding(8.dp)) {
                         OutlinedButton(
-                            onClick = { timePeriod.value = "AM"},
+                            onClick = { timePeriod.value = "AM" },
                             shape = RectangleShape,
                         ) {
                             Text(text = "AM")
@@ -219,7 +260,11 @@ fun AmPmTimePicker(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyDropDownMenu(options: List<String>, label: @Composable () -> Unit) {
+fun MyDropDownMenu(
+    options: List<String>,
+    label: @Composable () -> Unit,
+    optionState: MutableState<String>
+) {
     val expanded = remember {
         mutableStateOf(false)
     }
@@ -264,7 +309,6 @@ fun MyDropDownMenu(options: List<String>, label: @Composable () -> Unit) {
     )
 
 
-
     if (expanded.value) {
         options.forEach { selectedOption ->
             DropDownItem(
@@ -272,6 +316,7 @@ fun MyDropDownMenu(options: List<String>, label: @Composable () -> Unit) {
                 onClick = {
                     selectedOptionText.value = selectedOption
                     expanded.value = false
+                    optionState.value = selectedOption
                 })
         }
     }
