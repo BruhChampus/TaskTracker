@@ -39,6 +39,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.tasktracker.transformTime
 
+//TODO datepicker можеш сделать что получаем только дату начала таска, и потом когда этото день настает присылать уведомление, мол на сегодня столько то тасков, ну и все
 
 @Composable
 fun MyTimePicker(
@@ -48,12 +49,27 @@ fun MyTimePicker(
     confirmButton: @Composable (() -> Unit),
     timeState: MutableState<String>,
     containerColor: Color = MaterialTheme.colorScheme.surface,
-    is24Hours:Boolean = true
+    is24Hours: Boolean = true
 ) {
-             when(is24Hours){
-                 true -> TwentyFourHoursPicker(title, onDismissRequest, dismissButton, confirmButton, timeState, containerColor)
-                 false -> AmPmTimePicker(title, onDismissRequest, dismissButton, confirmButton, timeState, containerColor)
-             }
+    when (is24Hours) {
+        true -> TwentyFourHoursPicker(
+            title,
+            onDismissRequest,
+            dismissButton,
+            confirmButton,
+            timeState,
+            containerColor
+        )
+
+        false -> AmPmTimePicker(
+            title,
+            onDismissRequest,
+            dismissButton,
+            confirmButton,
+            timeState,
+            containerColor
+        )
+    }
 }
 
 @Composable
@@ -187,6 +203,10 @@ fun AmPmTimePicker(
         mutableStateOf("AM")
     }
 
+    val isAmClicked = remember {
+        mutableStateOf(true)
+    }
+
     timeState.value = "${hoursState.value} : ${minutesState.value} ${timePeriod.value}"
 
     val hours =
@@ -235,16 +255,35 @@ fun AmPmTimePicker(
                     }
                     Row(modifier = Modifier.padding(8.dp)) {
                         OutlinedButton(
-                            onClick = { timePeriod.value = "AM" },
+                            onClick = { timePeriod.value = "AM"
+                                      isAmClicked.value = true
+                                      },
                             shape = RectangleShape,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isAmClicked.value) {
+                                    Color.Gray
+                                } else {
+                                    Color.Transparent
+                                }
+                            )
                         ) {
-                            Text(text = "AM")
+                            Text(text = "AM", color = MaterialTheme.colorScheme.secondary)
                         }
                         OutlinedButton(
-                            onClick = { timePeriod.value = "PM" },
-                            shape = RectangleShape
+                            onClick = {
+                                timePeriod.value = "PM"
+                                isAmClicked.value = false
+                            },
+                            shape = RectangleShape,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isAmClicked.value) {
+                                    Color.Transparent
+                                } else {
+                                    Color.Gray
+                                }
+                            )
                         ) {
-                            Text(text = "PM")
+                            Text(text = "PM", color = MaterialTheme.colorScheme.secondary)
                         }
                     }
                 }

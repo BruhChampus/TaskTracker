@@ -19,7 +19,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,9 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.tasktracker.view.pickers.AmPmTimePicker
+import com.example.tasktracker.Utils
 import com.example.tasktracker.view.pickers.MyTimePicker
-import com.example.tasktracker.view.pickers.TwentyFourHoursPicker
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -52,7 +50,7 @@ fun CreateScreen() {
 
     Column(modifier = Modifier.padding(8.dp)) {
 
-        Pickers()
+        DateTimePickers()
 
         OutlinedTextField(
             value = textTitleState.value,
@@ -112,7 +110,7 @@ fun CreateScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ColumnScope.Pickers() {
+fun ColumnScope.DateTimePickers() {
     val setDateStateText = rememberSaveable {
         mutableStateOf("Set date")
     }
@@ -123,7 +121,6 @@ fun ColumnScope.Pickers() {
     val showTimePicker = remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState()
-    val timePickerState = rememberTimePickerState()
 
     val context = LocalContext.current
 
@@ -160,18 +157,15 @@ fun ColumnScope.Pickers() {
                             val yesterdayDate = Calendar.getInstance().apply {
                                 timeInMillis = (System.currentTimeMillis() - 1000 * 60 * 60 * 24)
                             }
-                            if (selectedDate.before(yesterdayDate)) {
-                                val toast = Toast.makeText(
-                                    context,
-                                    "Selected date should be today or further, please select again",
-                                    Toast.LENGTH_LONG
-                                )
-                                toast.setGravity(Gravity.TOP, 0, 0)
-                                toast.show()
+                            val dateFormatter =
+                                SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
+                            if (selectedDate.before(yesterdayDate)) {
+                                Utils.showToast(
+                                    context,
+                                    "Selected date should be today or further, please select again"
+                                )
                             } else {
-                                val dateFormatter =
-                                    SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
                                 setDateStateText.value = dateFormatter.format(selectedDate.time)
                                 showDatePicker.value = false
                             }
@@ -208,7 +202,7 @@ fun ColumnScope.Pickers() {
 
 
         if (showTimePicker.value) {
-            val timeState = remember{
+            val timeState = remember {
                 mutableStateOf("-")
             }
             MyTimePicker(
@@ -227,7 +221,7 @@ fun ColumnScope.Pickers() {
                         }
                     ) { Text(text = "OK", color = MaterialTheme.colorScheme.secondary) }
                 },
-               timeState = timeState,
+                timeState = timeState,
                 is24Hours = false
             )
             setTimeStateText.value = timeState.value
