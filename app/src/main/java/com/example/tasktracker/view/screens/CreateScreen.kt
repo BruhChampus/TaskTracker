@@ -1,18 +1,28 @@
 package com.example.tasktracker.view.screens
 
-import android.view.Gravity
-import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -20,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -27,73 +38,85 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.Utils
+import com.example.tasktracker.randomizeColor
+import com.example.tasktracker.ui.theme.PurpleGrey40
+import com.example.tasktracker.ui.theme.colorsList
+import com.example.tasktracker.view.model.TaskCard
 import com.example.tasktracker.view.pickers.MyTimePicker
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import com.example.tasktracker.viewmodel.CreateScreenViewmodel
 
-@Preview(showSystemUi = true)
 @Composable
-fun CreateScreen() {
+fun CreateScreen(createScreenViewmodel: CreateScreenViewmodel = viewModel()) {
 
-    val textTitleState = rememberSaveable {
-        mutableStateOf("")
-    }
-    val textContentState = rememberSaveable {
-        mutableStateOf("")
-    }
+    val taskTitleState = createScreenViewmodel.taskTitle.observeAsState()
+
+    val taskContentState = createScreenViewmodel.taskContent.observeAsState()
 
 
 
-    Column(modifier = Modifier.padding(8.dp)) {
+     Column(modifier = Modifier.padding(8.dp)) {
 
-        DateTimePickers()
+        DatePickerView()
+        TimePickerView()
 
         OutlinedTextField(
-            value = textTitleState.value,
-            onValueChange = { textTitleState.value = it },
+            value = taskTitleState.value ?: "",
+            onValueChange = {
+                createScreenViewmodel.updateTaskTitle(it)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.1f)
                 .padding(vertical = 8.dp),
             label = { Text(text = "Task card title") },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Black,
-                focusedLabelColor = Color.Black,
-                focusedContainerColor = Color.White,
+                focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
 
-                cursorColor = Color.Black,
+                cursorColor = MaterialTheme.colorScheme.secondary,
 
-                disabledContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
+                disabledContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.primary
             )
         )
 
         OutlinedTextField(
-            value = textContentState.value,
-            onValueChange = { textContentState.value = it },
+            value = taskContentState.value ?: "",
+            onValueChange = { createScreenViewmodel.updateTaskContent(it) },
             modifier = Modifier
                 .weight(0.5f)
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
             label = { Text(text = "Task card content") },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Black,
-                focusedLabelColor = Color.Black,
-                focusedContainerColor = Color.White,
+                focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                focusedContainerColor = MaterialTheme.colorScheme.primary,
 
-                cursorColor = Color.Black,
+                cursorColor = MaterialTheme.colorScheme.secondary,
 
-                disabledContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
+                disabledContainerColor = MaterialTheme.colorScheme.primary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.primary
             )
         )
-
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { /*TODO*/
+                Utils.list.add(
+                    TaskCard(
+                        content = createScreenViewmodel.taskContent.value!!,
+                        title = createScreenViewmodel.taskTitle.value!!,
+                        time = createScreenViewmodel.timeValue.value!!,
+                        cardColor = randomizeColor(colorsList = colorsList).toString()
+                    )
+                )
+             },
             shape = RoundedCornerShape(18.dp),
             modifier = Modifier
                 .weight(0.08f)
@@ -102,7 +125,6 @@ fun CreateScreen() {
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
         ) {
             Text("Save", color = MaterialTheme.colorScheme.primary)
-
         }
     }
 }
@@ -110,19 +132,16 @@ fun CreateScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ColumnScope.DateTimePickers() {
-    val setDateStateText = rememberSaveable {
-        mutableStateOf("Set date")
-    }
-    val setTimeStateText = rememberSaveable {
-        mutableStateOf("Set time")
-    }
+fun ColumnScope.DatePickerView(createScreenViewmodel: CreateScreenViewmodel = viewModel()) {
+    val dateTextState = createScreenViewmodel.dateValue.observeAsState()
+
+
     val showDatePicker = remember { mutableStateOf(false) }
-    val showTimePicker = remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState()
 
     val context = LocalContext.current
+
 
     //Date picker
     Button(
@@ -137,7 +156,8 @@ fun ColumnScope.DateTimePickers() {
             .weight(0.1f)
             .padding(vertical = 8.dp)
     ) {
-        Text(text = setDateStateText.value)
+
+        Text(text = dateTextState.value ?: "")
         if (showDatePicker.value) {
             DatePickerDialog(onDismissRequest = { /*TODO*/ },
                 dismissButton = {
@@ -150,28 +170,21 @@ fun ColumnScope.DateTimePickers() {
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            val selectedDate = Calendar.getInstance().apply {
-                                timeInMillis =
-                                    datePickerState.selectedDateMillis ?: System.currentTimeMillis()
-                            }
-                            val yesterdayDate = Calendar.getInstance().apply {
-                                timeInMillis = (System.currentTimeMillis() - 1000 * 60 * 60 * 24)
-                            }
-                            val dateFormatter =
-                                SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-
-                            if (selectedDate.before(yesterdayDate)) {
+                            createScreenViewmodel.getDateTimeInMillis(
+                                datePickerState,
+                                showDatePicker
+                            )
+                            //If date goes before our current date show toast
+                            if (createScreenViewmodel.isWrongDate.value!!) {
                                 Utils.showToast(
                                     context,
                                     "Selected date should be today or further, please select again"
                                 )
-                            } else {
-                                setDateStateText.value = dateFormatter.format(selectedDate.time)
-                                showDatePicker.value = false
                             }
                         }
                     ) { Text(text = "OK", color = MaterialTheme.colorScheme.secondary) }
-                }) {
+                })
+            {
                 DatePicker(
                     state = datePickerState,
                     colors = DatePickerDefaults.colors(
@@ -184,6 +197,19 @@ fun ColumnScope.DateTimePickers() {
         }
     }
 
+
+}
+
+@Composable
+fun ColumnScope.TimePickerView(createScreenViewmodel: CreateScreenViewmodel = viewModel()) {
+
+    val showTimePicker = remember { mutableStateOf(false) }
+
+    val timeState = remember {
+        mutableStateOf("-")
+    }
+
+    val timeText = createScreenViewmodel.timeValue.observeAsState()
 
     //Time picker
     Button(
@@ -198,13 +224,10 @@ fun ColumnScope.DateTimePickers() {
             .weight(0.1f)
             .padding(vertical = 8.dp)
     ) {
-        Text(text = setTimeStateText.value)
+        Text(text = timeText.value ?: "")
 
 
         if (showTimePicker.value) {
-            val timeState = remember {
-                mutableStateOf("-")
-            }
             MyTimePicker(
                 onDismissRequest = { /*TODO*/ },
                 dismissButton = {
@@ -224,8 +247,8 @@ fun ColumnScope.DateTimePickers() {
                 timeState = timeState,
                 is24Hours = false
             )
-            setTimeStateText.value = timeState.value
-        }
+            createScreenViewmodel.updateTimeValue(timeState.value)
 
+        }
     }
 }

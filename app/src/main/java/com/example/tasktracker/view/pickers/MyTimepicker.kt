@@ -37,10 +37,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.tasktracker.transformTime
+import com.example.tasktracker.Utils
+
 
 //TODO datepicker можеш сделать что получаем только дату начала таска, и потом когда этото день настает присылать уведомление, мол на сегодня столько то тасков, ну и все
-
+//TODO 24 hours time picker сделать чтоб нельзя было писать числа выше 23 и 59
 @Composable
 fun MyTimePicker(
     title: String = "Select Time",
@@ -215,7 +216,7 @@ fun AmPmTimePicker(
     val minutes = ArrayList<String>()
     for (i in 0..59 step 5) {
 
-        minutes.add(transformTime(i.toString()))
+        minutes.add(Utils.transformTime(i.toString()))
     }
 
     Dialog(
@@ -361,16 +362,7 @@ fun MyDropDownMenu(
     }
 }
 
-/*
-*  options.forEach { selectedOption ->
-            DropDownItem(
-                text = { Text(text = selectedOption) },
-                onClick = {
-                    selectedOptionText.value = selectedOption
-                    expanded.value = false
-                })
-        }
-* */
+
 @Composable
 fun DropDownItem(text: @Composable () -> Unit, onClick: () -> Unit) {
     Box(modifier = Modifier

@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.tasktracker.viewmodel.randomizeColor
+import com.example.tasktracker.randomizeColor
 import com.example.tasktracker.ui.theme.PurpleGrey40
 import com.example.tasktracker.ui.theme.colorsList
 

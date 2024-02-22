@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -70,7 +72,7 @@ fun TaskTrackerMainScreen(){
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = BottomNavBarItem.Home.route) {
         composable(BottomNavBarItem.Home.route) { HomeScreen() }
-        composable(BottomNavBarItem.Create.route) { CreateScreen() }
+        composable(BottomNavBarItem.Create.route) { CreateScreen()}
         composable(BottomNavBarItem.Done.route) { DoneScreen() }
     }
 }

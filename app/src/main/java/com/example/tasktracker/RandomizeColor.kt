@@ -1,4 +1,4 @@
-package com.example.tasktracker.viewmodel
+package com.example.tasktracker
 
 import androidx.compose.ui.graphics.Color
 import kotlin.random.Random
