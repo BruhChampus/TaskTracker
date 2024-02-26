@@ -22,7 +22,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -41,8 +40,7 @@ import com.example.tasktracker.Utils
 
 
 //TODO datepicker можеш сделать что получаем только дату начала таска, и потом когда этото день настает присылать уведомление, мол на сегодня столько то тасков, ну и все
-//TODO 24 hours time picker сделать чтоб нельзя было писать числа выше 23 и 59
-@Composable
+ @Composable
 fun MyTimePicker(
     title: String = "Select Time",
     onDismissRequest: () -> Unit,
@@ -91,7 +89,6 @@ fun TwentyFourHoursPicker(
         mutableStateOf("00")
     }
 
-    timeState.value = "${hoursState.value} : ${minutesState.value}"
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -111,7 +108,7 @@ fun TwentyFourHoursPicker(
                         .padding(24.dp)
                 ) {
                     Text(text = title)
-                    Row() {
+                    Row {
                         OutlinedTextField(
                             value = hoursState.value,
                             onValueChange = {
@@ -176,7 +173,14 @@ fun TwentyFourHoursPicker(
                     }
                 }
                 dismissButton?.invoke()
-                confirmButton()
+                if(hoursState.value != "" && minutesState.value != "") {
+                    if (hoursState.value.toInt() >= 24 || minutesState.value.toInt() >= 60) {
+                        Text(text = "Time must be in 24-hours format", color = Color.Red, modifier = Modifier.padding(8.dp))
+                    } else {
+                        timeState.value = "${Utils.transformTime(hoursState.value)} : ${Utils.transformTime(minutesState.value)}"
+                        confirmButton()
+                    }
+                }
             }
         }
     }

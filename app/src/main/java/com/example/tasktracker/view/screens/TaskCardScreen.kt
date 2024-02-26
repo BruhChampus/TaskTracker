@@ -1,12 +1,9 @@
 package com.example.tasktracker.view.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +12,7 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,9 +26,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.tasktracker.randomizeColor
-import com.example.tasktracker.ui.theme.PurpleGrey40
-import com.example.tasktracker.ui.theme.colorsList
+import com.example.tasktracker.Utils
+ import com.example.tasktracker.view.ui.theme.PurpleGrey40
+import com.example.tasktracker.view.ui.theme.colorsList
 
 @Preview(showSystemUi = true)
 @Composable
@@ -71,13 +69,13 @@ fun TaskCardView() {//Add card:TaskCard
                     iconDoneState.value = !iconDoneState.value
                 }
         )
-        Spacer(
+        Divider(
+            thickness = 2.dp,
+            color = Color.Black,
             modifier = Modifier
-                .height(1.dp)
                 .width(15.dp)
                 .weight(1f)
-                .background(Color.Black)
-                .align(Alignment.CenterVertically),
+                 .align(Alignment.CenterVertically),
         )
 
         Card(
@@ -85,7 +83,7 @@ fun TaskCardView() {//Add card:TaskCard
                 .weight(11f)
                 .padding(start = 0.dp, end = 0.dp, top = 10.dp, bottom = 10.dp),
             shape = RoundedCornerShape(15.dp),
-            colors = CardDefaults.cardColors(containerColor = randomizeColor(colorsList)),
+            colors = CardDefaults.cardColors(containerColor = Utils.randomizeColor(colorsList)),
         ) {
             Column() {
                 Text(
@@ -116,11 +114,11 @@ fun TaskCardView() {//Add card:TaskCard
                 )
             }
         }
-        Spacer(
+        Divider(
+            thickness = 2.dp,
+            color = Color.Black,
             modifier = Modifier
-                .height(1.dp)
                 .weight(2f)
-                .background(Color.Black)
                 .align(Alignment.CenterVertically),
         )
     }

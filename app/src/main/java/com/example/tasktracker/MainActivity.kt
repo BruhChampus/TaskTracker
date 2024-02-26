@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,7 +20,7 @@ import com.example.tasktracker.view.bottomnavigat.BottomMenuView
 import com.example.tasktracker.view.screens.CreateScreen
 import com.example.tasktracker.view.screens.DoneScreen
 import com.example.tasktracker.view.screens.HomeScreen
-import com.example.tasktracker.ui.theme.TaskTrackerTheme
+import com.example.tasktracker.view.ui.theme.TaskTrackerTheme
 import com.example.tasktracker.view.bottomnavigat.BottomNavBarItem
 import com.example.tasktracker.view.bottomnavigat.itemsList
 
