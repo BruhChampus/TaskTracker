@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id ("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 
 }
 
@@ -72,9 +73,11 @@ dependencies {
     //Room
     implementation ("androidx.room:room-runtime:2.6.1")
     implementation ("androidx.room:room-ktx:2.6.1")
+    implementation("com.google.firebase:firebase-database:20.3.0")
 
     ksp("androidx.room:room-compiler:2.6.1")
 
+    //Viewmodel dependencies
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.2")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")

@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.Utils
 import com.example.tasktracker.view.ui.theme.colorsList
-import com.example.tasktracker.view.model.TaskCard
+import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.view.pickers.MyTimePicker
 import com.example.tasktracker.viewmodel.CreateScreenViewmodel
 
