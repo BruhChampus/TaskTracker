@@ -26,29 +26,30 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import com.example.tasktracker.Utils
- import com.example.tasktracker.view.ui.theme.PurpleGrey40
+import com.example.tasktracker.data.model.TaskCard
+import com.example.tasktracker.view.ui.theme.PurpleGrey40
 import com.example.tasktracker.view.ui.theme.colorsList
 
-@Preview(showSystemUi = true)
 @Composable
-fun TaskCardScreen() {
+fun TaskCardScreen(taskCard: TaskCard) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "task.time",
+            text = taskCard.time,
             modifier = Modifier
                 .padding(horizontal = 15.dp)
                 .align(Alignment.CenterVertically),
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
-        TaskCardView()
+        TaskCardView(taskCard)
     }
 }
 
 
 @Composable
-fun TaskCardView() {//Add card:TaskCard
+fun TaskCardView(taskCard: TaskCard) {//Add card:TaskCard
 
     Row {
         val iconDoneState = rememberSaveable {
@@ -57,11 +58,11 @@ fun TaskCardView() {//Add card:TaskCard
 
         Icon(
             imageVector =
-            if(iconDoneState.value) {
+            if (iconDoneState.value) {
                 Icons.Default.CheckCircle
-            }else{
-                 Icons.Default.AddCircle
-                 },
+            } else {
+                Icons.Default.AddCircle
+            },
             contentDescription = "",
             modifier = Modifier
                 .align(Alignment.CenterVertically)
@@ -75,7 +76,7 @@ fun TaskCardView() {//Add card:TaskCard
             modifier = Modifier
                 .width(15.dp)
                 .weight(1f)
-                 .align(Alignment.CenterVertically),
+                .align(Alignment.CenterVertically),
         )
 
         Card(
@@ -83,18 +84,20 @@ fun TaskCardView() {//Add card:TaskCard
                 .weight(11f)
                 .padding(start = 0.dp, end = 0.dp, top = 10.dp, bottom = 10.dp),
             shape = RoundedCornerShape(15.dp),
-            colors = CardDefaults.cardColors(containerColor = Utils.randomizeColor(colorsList)),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(taskCard.cardColor)
+             ),
         ) {
             Column() {
                 Text(
-                    text = "task.title", modifier = Modifier
+                    text = taskCard.title, modifier = Modifier
                         .padding(8.dp)
                         .align(Alignment.Start),
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
                 Text(
-                    text = "task.content",
+                    text = taskCard.content,
                     maxLines = 5,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
@@ -105,7 +108,7 @@ fun TaskCardView() {//Add card:TaskCard
                 )
 
                 Text(
-                    text = "task.time",
+                    text = taskCard.time,
                     modifier = Modifier
                         .padding(8.dp)
                         .align(Alignment.Start),

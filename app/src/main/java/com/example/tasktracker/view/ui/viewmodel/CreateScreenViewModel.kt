@@ -10,14 +10,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.data.repository.TasksRepositoryImpl
+import com.example.tasktracker.view.ui.UiState.CreateScreenUIState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class CreateScreenViewModel(val taskTrackerRepo:TasksRepositoryImpl) : ViewModel() {
+class CreateScreenViewModel(private val taskTrackerRepo:TasksRepositoryImpl) : ViewModel() {
 
      private val _taskTitle = MutableLiveData("")
     val taskTitle: LiveData<String>
@@ -43,6 +49,10 @@ class CreateScreenViewModel(val taskTrackerRepo:TasksRepositoryImpl) : ViewModel
         get() = _isWrongDate
 
 
+    private val _uiState = MutableStateFlow(CreateScreenUIState())
+    val uiState:StateFlow<CreateScreenUIState>
+        get() = _uiState.asStateFlow()
+
     fun updateTaskTitle(title: String) {
         _taskTitle.value = title
     }
@@ -56,9 +66,12 @@ class CreateScreenViewModel(val taskTrackerRepo:TasksRepositoryImpl) : ViewModel
     }
 
     fun sendTaskCardToDB(taskCard: TaskCard){
-        viewModelScope.launch(Dispatchers.IO) {
-            taskTrackerRepo.insertTaskCard(taskCard)
-        }
+         viewModelScope.launch(Dispatchers.IO) {
+             _uiState.update { currentState -> currentState.copy(savingData = true) }
+             taskTrackerRepo.insertTaskCard(taskCard)
+            delay(1000)
+             _uiState.update { currentState -> currentState.copy(savingData = false) }
+         }
     }
 
 
