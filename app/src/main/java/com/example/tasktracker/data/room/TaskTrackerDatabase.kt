@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.tasktracker.data.model.ScheduledDateWithTaskCard
+import com.example.tasktracker.data.model.TaskCardWithScheduledDate
 import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.data.model.TaskCardScheduledDate
 
@@ -12,10 +12,10 @@ import com.example.tasktracker.data.model.TaskCardScheduledDate
 @Database(
     entities = [TaskCard::class,
         TaskCardScheduledDate::class,
-        ScheduledDateWithTaskCard::class], version = 1
+        ], version = 1
 )
 abstract class TaskTrackerDatabase : RoomDatabase() {
-    abstract fun taskCardsDao(): TaskCardsDAO
+    abstract fun taskCardsDao(): TaskTrackerDAO
 
     companion object {
         @Volatile

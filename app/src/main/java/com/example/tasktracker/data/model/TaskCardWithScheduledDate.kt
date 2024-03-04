@@ -1,9 +1,11 @@
 package com.example.tasktracker.data.model
 
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Relation
 
-data class ScheduledDateWithTaskCard(
+
+data class TaskCardWithScheduledDate(
     @Embedded
     val taskCard: TaskCard,
     @Relation(

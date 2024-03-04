@@ -212,14 +212,13 @@ fun AmPmTimePicker(
         mutableStateOf(true)
     }
 
-    timeState.value = "${hoursState.value} : ${minutesState.value} ${timePeriod.value}"
+    timeState.value = "${hoursState.value}:${minutesState.value} ${timePeriod.value}"
 
     val hours =
         listOf("00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
 
     val minutes = ArrayList<String>()
     for (i in 0..59 step 5) {
-
         minutes.add(Utils.transformTime(i.toString()))
     }
 

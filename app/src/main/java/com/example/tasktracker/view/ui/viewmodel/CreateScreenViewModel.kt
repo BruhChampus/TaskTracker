@@ -1,19 +1,25 @@
-package com.example.tasktracker.viewmodel
+package com.example.tasktracker.view.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.tasktracker.data.model.TaskCard
+import com.example.tasktracker.data.repository.TasksRepositoryImpl
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class CreateScreenViewmodel : ViewModel() {
+class CreateScreenViewModel(val taskTrackerRepo:TasksRepositoryImpl) : ViewModel() {
 
-    //textTitleState:String, taskContentState:String, timeState:String, dateStateInMillis:Long
-    private val _taskTitle = MutableLiveData("")
+     private val _taskTitle = MutableLiveData("")
     val taskTitle: LiveData<String>
         get() = _taskTitle
     private val _taskContent = MutableLiveData("")
@@ -47,6 +53,24 @@ class CreateScreenViewmodel : ViewModel() {
 
     fun updateTimeValue(time: String) {
         _timeValue.value = time
+    }
+
+    fun sendTaskCardToDB(taskCard: TaskCard){
+        viewModelScope.launch(Dispatchers.IO) {
+            taskTrackerRepo.insertTaskCard(taskCard)
+        }
+    }
+
+
+    fun getAllTaskCards(){
+        viewModelScope.launch(Dispatchers.IO) {
+            taskTrackerRepo.getAllTaskCards().collect(){taskCardList ->
+                taskCardList.forEach {
+                    Log.i("TaskCardDATA", it.toString())
+                }
+
+            }
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
