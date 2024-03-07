@@ -69,22 +69,11 @@ class CreateScreenViewModel(private val taskTrackerRepo:TasksRepositoryImpl) : V
          viewModelScope.launch(Dispatchers.IO) {
              _uiState.update { currentState -> currentState.copy(savingData = true) }
              taskTrackerRepo.insertTaskCard(taskCard)
-            delay(1000)
-             _uiState.update { currentState -> currentState.copy(savingData = false) }
+              _uiState.update { currentState -> currentState.copy(savingData = false) }
          }
     }
 
 
-    fun getAllTaskCards(){
-        viewModelScope.launch(Dispatchers.IO) {
-            taskTrackerRepo.getAllTaskCards().collect(){taskCardList ->
-                taskCardList.forEach {
-                    Log.i("TaskCardDATA", it.toString())
-                }
-
-            }
-        }
-    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     fun getDateTimeInMillis(

@@ -23,17 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.toColorInt
-import com.example.tasktracker.Utils
 import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.view.ui.theme.PurpleGrey40
-import com.example.tasktracker.view.ui.theme.colorsList
 
 @Composable
-fun TaskCardScreen(taskCard: TaskCard) {
+fun TaskCardScreen(taskCard: TaskCard, onClick:()-> Unit) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = taskCard.time,
@@ -43,13 +39,13 @@ fun TaskCardScreen(taskCard: TaskCard) {
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
-        TaskCardView(taskCard)
+        TaskCardView(taskCard = taskCard, showTimeInCard = false, onClick)
     }
 }
 
 
 @Composable
-fun TaskCardView(taskCard: TaskCard) {//Add card:TaskCard
+fun TaskCardView(taskCard: TaskCard, showTimeInCard: Boolean = false, onCLick:()-> Unit) {
 
     Row {
         val iconDoneState = rememberSaveable {
@@ -68,7 +64,8 @@ fun TaskCardView(taskCard: TaskCard) {//Add card:TaskCard
                 .align(Alignment.CenterVertically)
                 .clickable {
                     iconDoneState.value = !iconDoneState.value
-                }
+                    onCLick()
+                 }
         )
         Divider(
             thickness = 2.dp,
@@ -86,7 +83,7 @@ fun TaskCardView(taskCard: TaskCard) {//Add card:TaskCard
             shape = RoundedCornerShape(15.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color(taskCard.cardColor)
-             ),
+            ),
         ) {
             Column() {
                 Text(
@@ -107,14 +104,16 @@ fun TaskCardView(taskCard: TaskCard) {//Add card:TaskCard
                     fontSize = 13.sp
                 )
 
-                Text(
-                    text = taskCard.time,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(Alignment.Start),
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
+                if (showTimeInCard) {
+                    Text(
+                        text = taskCard.time,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .align(Alignment.Start),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
             }
         }
         Divider(

@@ -18,10 +18,16 @@ interface TaskTrackerDAO {
     @Query("SELECT *FROM TaskCard")
     fun getAllTaskCards(): Flow<List<TaskCard>>
 
+    @Query("SELECT *FROM TaskCard WHERE isDone = true")
+    fun getAllDoneTaskCards(): Flow<List<TaskCard>>
+
+    @Query("SELECT *FROM TaskCard WHERE isDone = false")
+    fun getAllNotDoneTaskCards(): Flow<List<TaskCard>>
+
     @Query("SELECT *FROM TaskCard WHERE id = :id")
     suspend fun getTaskCardById(id: Int): TaskCard
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTaskCard(taskCard: TaskCard)
 
     @Delete

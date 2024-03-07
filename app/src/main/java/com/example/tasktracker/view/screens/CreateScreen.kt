@@ -65,9 +65,6 @@ fun CreateScreen(createScreenViewmodel: CreateScreenViewModel = giveCreateScreen
 
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        createScreenViewmodel.getAllTaskCards()
-    }
 
 
 
@@ -85,9 +82,6 @@ fun CreateScreen(createScreenViewmodel: CreateScreenViewModel = giveCreateScreen
                     }
                 }
             }
-
-
-
 
 
         DatePickerView()
@@ -160,8 +154,8 @@ fun CreateScreen(createScreenViewmodel: CreateScreenViewModel = giveCreateScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ColumnScope.DatePickerView(createScreenViewmodel: CreateScreenViewModel = giveCreateScreenViewModel()) {
-    val dateTextState = createScreenViewmodel.dateValue.observeAsState()
+fun ColumnScope.DatePickerView(createScreenViewModel: CreateScreenViewModel = giveCreateScreenViewModel()) {
+    val dateTextState = createScreenViewModel.dateValue.observeAsState()
 
 
     val showDatePicker = remember { mutableStateOf(false) }
@@ -198,12 +192,12 @@ fun ColumnScope.DatePickerView(createScreenViewmodel: CreateScreenViewModel = gi
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            createScreenViewmodel.getDateTimeInMillis(
+                            createScreenViewModel.getDateTimeInMillis(
                                 datePickerState,
                                 showDatePicker
                             )
                             //If date goes before our current date show toast
-                            if (createScreenViewmodel.isWrongDate.value!!) {
+                            if (createScreenViewModel.isWrongDate.value!!) {
                                 Utils.showToast(
                                     context,
                                     "Selected date should be today or further, please select again"

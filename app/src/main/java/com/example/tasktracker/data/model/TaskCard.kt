@@ -9,4 +9,6 @@ data class TaskCard(
     val title: String ,
     val content: String,
     val time: String,
-    val cardColor:Int)
+    val cardColor:Int,
+    val isDone:Boolean = false
+    )

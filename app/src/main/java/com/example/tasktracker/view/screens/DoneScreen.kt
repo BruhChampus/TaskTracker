@@ -50,7 +50,7 @@ fun DoneScreen() {
                 }
             }
 //            items(2) {
-//              TaskCardView()//add list of done tasks and put it in
+//              TaskCardView(showTimeInCard = true)//add list of done tasks and put it in
 //            }
         }
     }

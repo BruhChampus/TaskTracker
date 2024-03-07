@@ -10,6 +10,14 @@ class TasksRepositoryImpl(private val taskTrackerDAO: TaskTrackerDAO): TasksRepo
       return  taskTrackerDAO.getAllTaskCards()
     }
 
+    override fun getAllDoneTaskCards(): Flow<List<TaskCard>> {
+        return  taskTrackerDAO.getAllDoneTaskCards()
+    }
+
+    override fun getAllNotDoneTaskCards(): Flow<List<TaskCard>> {
+        return  taskTrackerDAO.getAllNotDoneTaskCards()
+    }
+
     override suspend fun getTaskCardById(id: Int): TaskCard {
         return taskTrackerDAO.getTaskCardById(id)
     }

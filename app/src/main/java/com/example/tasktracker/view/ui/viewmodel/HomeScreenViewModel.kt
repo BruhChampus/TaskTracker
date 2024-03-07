@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.data.repository.TasksRepositoryImpl
-import com.example.tasktracker.view.ui.UiState.CreateScreenUIState
 import com.example.tasktracker.view.ui.UiState.HomeScreenUiState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,21 +21,34 @@ class HomeScreenViewModel(private val taskTrackerRepo: TasksRepositoryImpl) : Vi
         get() = _uiState.asStateFlow()
 
 
-    fun getAllTaskCards() {
-        val list =  ArrayList<TaskCard>()
+    init {
+        getAllNotDoneTaskCards()
+    }
+
+    private fun getAllNotDoneTaskCards() {
         viewModelScope.launch(Dispatchers.IO) {
-            taskTrackerRepo.getAllTaskCards().collect() { taskCardList ->
-                _uiState.update { currentState -> currentState.copy(isLoading = true) }
-                taskCardList.forEach {
-                    list.add(it)
+            taskTrackerRepo.getAllNotDoneTaskCards().collect() { taskCardList ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isLoading = true,
+                    )
                 }
                 _uiState.update { currentState ->
                     currentState.copy(
                         isLoading = false,
-                        tasksList = list
+                        tasksList = taskCardList
                     )
                 }
             }
+
+        }
+    }
+
+     fun remove(taskCard: TaskCard) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedList = uiState.value.tasksList.toMutableList().apply { remove(taskCard) }
+            _uiState.update { currentState -> currentState.copy(tasksList = updatedList) }
+            taskTrackerRepo.insertTaskCard(taskCard.copy(isDone = true))
         }
     }
 }
