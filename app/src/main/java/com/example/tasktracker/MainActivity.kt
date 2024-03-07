@@ -20,7 +20,7 @@ import com.example.tasktracker.view.bottomnavigat.BottomMenuView
 import com.example.tasktracker.view.screens.CreateScreen
 import com.example.tasktracker.view.screens.DoneScreen
 import com.example.tasktracker.view.screens.HomeScreen
-import com.example.tasktracker.ui.theme.TaskTrackerTheme
+import com.example.tasktracker.view.ui.theme.TaskTrackerTheme
 import com.example.tasktracker.view.bottomnavigat.BottomNavBarItem
 import com.example.tasktracker.view.bottomnavigat.itemsList
 
@@ -70,7 +70,7 @@ fun TaskTrackerMainScreen(){
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = BottomNavBarItem.Home.route) {
         composable(BottomNavBarItem.Home.route) { HomeScreen() }
-        composable(BottomNavBarItem.Create.route) { CreateScreen() }
+        composable(BottomNavBarItem.Create.route) { CreateScreen()}
         composable(BottomNavBarItem.Done.route) { DoneScreen() }
     }
 }
