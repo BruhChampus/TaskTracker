@@ -2,7 +2,7 @@ package com.example.tasktracker.view.ui.UiState
 
 import com.example.tasktracker.data.model.TaskCard
 
-data class HomeScreenUiState(
+data class DoneScreenUiState(
     val isLoading:Boolean = false,
-    val notDoneTasksList: List<TaskCard> = emptyList()
+    val doneTasksList: List<TaskCard> = emptyList()
 )

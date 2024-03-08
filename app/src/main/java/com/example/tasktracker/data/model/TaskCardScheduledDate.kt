@@ -4,8 +4,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-
+//TODO fix
 @Entity(
+    primaryKeys = ["taskCardId"],
     foreignKeys = [ForeignKey(
         entity = TaskCard::class,
         parentColumns = arrayOf("id"),
@@ -15,7 +16,6 @@ import androidx.room.PrimaryKey
     )]
 )
 data class TaskCardScheduledDate(
-    @PrimaryKey
-    val taskCardId: Int,
+    val taskCardId: Int = 0,
     val dateInMillis: Long
 )

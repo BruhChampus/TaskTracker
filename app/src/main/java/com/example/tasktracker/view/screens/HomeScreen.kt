@@ -1,6 +1,5 @@
 package com.example.tasktracker.view.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +24,7 @@ import com.example.tasktracker.view.ui.viewmodel.factories.HomeScreenViewModelFa
 
 
 @Composable
-fun giveHomeScreenViewModel(): HomeScreenViewModel {
+private fun giveHomeScreenViewModel(): HomeScreenViewModel {
     val dao =
         TaskTrackerDatabase.getDatabaseInstance(context = LocalContext.current.applicationContext)
             .taskCardsDao()
@@ -38,7 +37,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewMode
 
     val homeScreenUIState = homeScreenViewModel.uiState.collectAsState()
 
-    if (homeScreenUIState.value.tasksList.isEmpty()) {
+    if (homeScreenUIState.value.notDoneTasksList.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(
                 text = "No tasks yet. Please create some!",
@@ -53,8 +52,8 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewMode
         }
     } else {
          LazyColumn() {
-            items(homeScreenUIState.value.tasksList.size,) { index ->
-                val taskCard = homeScreenUIState.value.tasksList[index]
+            items(homeScreenUIState.value.notDoneTasksList.size,) { index ->
+                val taskCard = homeScreenUIState.value.notDoneTasksList[index]
                 TaskCardScreen(
                     taskCard,
                     onClick = {

@@ -48,13 +48,9 @@ fun TaskCardScreen(taskCard: TaskCard, onClick:()-> Unit) {
 fun TaskCardView(taskCard: TaskCard, showTimeInCard: Boolean = false, onCLick:()-> Unit) {
 
     Row {
-        val iconDoneState = rememberSaveable {
-            mutableStateOf(false)
-        }
-
         Icon(
             imageVector =
-            if (iconDoneState.value) {
+            if (taskCard.isDone) {
                 Icons.Default.CheckCircle
             } else {
                 Icons.Default.AddCircle
@@ -63,8 +59,7 @@ fun TaskCardView(taskCard: TaskCard, showTimeInCard: Boolean = false, onCLick:()
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .clickable {
-                    iconDoneState.value = !iconDoneState.value
-                    onCLick()
+                     onCLick()
                  }
         )
         Divider(

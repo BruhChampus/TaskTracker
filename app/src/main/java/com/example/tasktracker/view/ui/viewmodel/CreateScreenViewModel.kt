@@ -1,6 +1,5 @@
 package com.example.tasktracker.view.ui.viewmodel
 
-import android.util.Log
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.MutableState
@@ -9,14 +8,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasktracker.data.model.TaskCard
+import com.example.tasktracker.data.model.TaskCardScheduledDate
 import com.example.tasktracker.data.repository.TasksRepositoryImpl
 import com.example.tasktracker.view.ui.UiState.CreateScreenUIState
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -72,6 +70,14 @@ class CreateScreenViewModel(private val taskTrackerRepo:TasksRepositoryImpl) : V
               _uiState.update { currentState -> currentState.copy(savingData = false) }
          }
     }
+
+
+    fun sendTaskCardScheduledDateToDB(taskCardScheduledDate: TaskCardScheduledDate){
+        viewModelScope.launch(Dispatchers.IO) {
+           taskTrackerRepo.insertTaskCardScheduledDate(taskCardScheduledDate)
+        }
+    }
+
 
 
 

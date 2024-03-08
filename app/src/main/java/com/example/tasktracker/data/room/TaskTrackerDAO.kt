@@ -5,8 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
-import com.example.tasktracker.data.model.TaskCardWithScheduledDate
 import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.data.model.TaskCardScheduledDate
 import kotlinx.coroutines.flow.Flow
@@ -33,7 +31,8 @@ interface TaskTrackerDAO {
     @Delete
     suspend fun deleteTaskCard(taskCard: TaskCard)
 
-
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+     suspend fun insertTaskCardScheduledDate(taskCardScheduledDate: TaskCardScheduledDate)
 
 
 //    @Transaction
