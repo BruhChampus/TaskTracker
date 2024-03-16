@@ -1,4 +1,4 @@
-package com.example.tasktracker.view.ui.viewmodel
+package com.example.tasktracker.view.ui.viewmodel.viewmodels
 
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -68,6 +68,7 @@ class CreateScreenViewModel(private val taskTrackerRepo:TasksRepositoryImpl) : V
              _uiState.update { currentState -> currentState.copy(savingData = true) }
              taskTrackerRepo.insertTaskCard(taskCard)
               _uiState.update { currentState -> currentState.copy(savingData = false) }
+              
          }
     }
 

@@ -5,12 +5,13 @@ import androidx.room.Entity
 import androidx.room.Relation
 
 
+//1 to n Relation
 data class TaskCardWithScheduledDate(
     @Embedded
-    val taskCard: TaskCard,
+    val taskCardScheduledDate:TaskCardScheduledDate,
     @Relation(
-        parentColumn = "id",
-        entityColumn = "taskCardId"
+        parentColumn = "dateInMillis",
+        entityColumn = "dateInMillis"
     )
-    val taskCardScheduledDate:TaskCardScheduledDate
+    val taskCardsList: List<TaskCard>
 )

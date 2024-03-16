@@ -4,18 +4,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-//TODO fix
-@Entity(
-    primaryKeys = ["taskCardId"],
-    foreignKeys = [ForeignKey(
-        entity = TaskCard::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("taskCardId"),
-        onUpdate = ForeignKey.CASCADE,
-        onDelete = ForeignKey.CASCADE
-    )]
-)
+@Entity
 data class TaskCardScheduledDate(
-    val taskCardId: Int = 0,
+    @PrimaryKey
     val dateInMillis: Long
 )

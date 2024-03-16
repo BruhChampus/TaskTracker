@@ -2,6 +2,7 @@ package com.example.tasktracker.data.repository
 
 import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.data.model.TaskCardScheduledDate
+import com.example.tasktracker.data.model.TaskCardWithScheduledDate
 import kotlinx.coroutines.flow.Flow
 
 interface TasksRepository{
@@ -17,5 +18,8 @@ interface TasksRepository{
 
     suspend fun insertTaskCardScheduledDate(taskCardScheduledDate: TaskCardScheduledDate)
 
-      //fun getScheduledDateWithTaskCard(dateInMillis:Long):Flow<List<TaskCardWithScheduledDate>>
+    fun getScheduledDateWithTaskCard(dateInMillis:Long):Flow<List<TaskCardWithScheduledDate>>
+
+    fun getAllScheduledDateWithTaskCards():Flow<List<TaskCardWithScheduledDate>>
+
 }

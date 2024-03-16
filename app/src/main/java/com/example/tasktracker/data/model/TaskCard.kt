@@ -10,5 +10,6 @@ data class TaskCard(
     val content: String,
     val time: String,
     val cardColor:Int,
-    val isDone:Boolean = false
+    val isDone:Boolean = false,
+    val dateInMillis: Long //From taskCardScheduledDate
     )

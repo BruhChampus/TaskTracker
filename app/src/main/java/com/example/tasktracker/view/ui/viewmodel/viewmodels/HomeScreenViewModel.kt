@@ -1,7 +1,9 @@
-package com.example.tasktracker.view.ui.viewmodel
+package com.example.tasktracker.view.ui.viewmodel.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.tasktracker.Utils
 import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.data.repository.TasksRepositoryImpl
 import com.example.tasktracker.view.ui.UiState.HomeScreenUiState
@@ -11,6 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.ZoneOffset
 
 class HomeScreenViewModel(private val taskTrackerRepo: TasksRepositoryImpl) : ViewModel() {
 
@@ -21,6 +25,12 @@ class HomeScreenViewModel(private val taskTrackerRepo: TasksRepositoryImpl) : Vi
 
     init {
         getAllNotDoneTaskCards()
+//
+//        if(uiState.value.notDoneTasksList.isNotEmpty()) {
+//            val currentDate =
+//                LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+//           getScheduledDateWithNotDoneTaskCards(currentDate)
+//        }
     }
 
     private fun getAllNotDoneTaskCards() {
@@ -42,9 +52,28 @@ class HomeScreenViewModel(private val taskTrackerRepo: TasksRepositoryImpl) : Vi
         }
     }
 
-     fun remove(taskCard: TaskCard) {
+    //Can match to get todays NotDone TaskCards. To homeScreenViewmodel
+    //        val currentDate = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+//        getScheduledDateWithDoneTaskCards(currentDate)
+    private fun getScheduledDateWithNotDoneTaskCards(dateInMills: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            val updatedList = uiState.value.notDoneTasksList.toMutableList().apply { remove(taskCard) }
+            taskTrackerRepo.getScheduledDateWithTaskCard(dateInMills)
+                .collect { taskCardsWithScheduledDate ->
+                    Log.i("JOOOPAAA", taskCardsWithScheduledDate.toString())
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            notDoneTasksList = taskCardsWithScheduledDate[0].taskCardsList
+                         )
+                    }
+                }
+        }
+    }
+
+
+    fun remove(taskCard: TaskCard) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedList =
+                uiState.value.notDoneTasksList.toMutableList().apply { remove(taskCard) }
             _uiState.update { currentState -> currentState.copy(notDoneTasksList = updatedList) }
             taskTrackerRepo.insertTaskCard(taskCard.copy(isDone = true))
         }

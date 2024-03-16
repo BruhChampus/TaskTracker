@@ -1,4 +1,4 @@
-package com.example.tasktracker.view.screens
+package com.example.tasktracker.view.taskcards
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -16,8 +16,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +27,7 @@ import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.view.ui.theme.PurpleGrey40
 
 @Composable
-fun TaskCardScreen(taskCard: TaskCard, onClick:()-> Unit) {
+fun TaskCardView(taskCard: TaskCard, onClick:()-> Unit) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = taskCard.time,
@@ -39,13 +37,13 @@ fun TaskCardScreen(taskCard: TaskCard, onClick:()-> Unit) {
             fontWeight = FontWeight.Bold,
             color = Color.Black
         )
-        TaskCardView(taskCard = taskCard, showTimeInCard = false, onClick)
+        TaskCardItem(taskCard = taskCard, showTimeInCard = false, onClick)
     }
 }
 
 
 @Composable
-fun TaskCardView(taskCard: TaskCard, showTimeInCard: Boolean = false, onCLick:()-> Unit) {
+fun TaskCardItem(taskCard: TaskCard, showTimeInCard: Boolean = false, onCLick:()-> Unit) {
 
     Row {
         Icon(

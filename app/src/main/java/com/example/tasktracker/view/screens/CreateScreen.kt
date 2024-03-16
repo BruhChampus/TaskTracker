@@ -1,5 +1,6 @@
 package com.example.tasktracker.view.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -40,7 +41,7 @@ import com.example.tasktracker.data.model.TaskCardScheduledDate
 import com.example.tasktracker.data.repository.TasksRepositoryImpl
 import com.example.tasktracker.data.room.TaskTrackerDatabase
 import com.example.tasktracker.view.pickers.MyTimePicker
-import com.example.tasktracker.view.ui.viewmodel.CreateScreenViewModel
+import com.example.tasktracker.view.ui.viewmodel.viewmodels.CreateScreenViewModel
 import com.example.tasktracker.view.ui.viewmodel.factories.CreateScreenViewModelFactory
 
 
@@ -69,7 +70,7 @@ fun CreateScreen(createScreenViewModel: CreateScreenViewModel = giveCreateScreen
 
     Column(modifier = Modifier.padding(8.dp)) {
 
-        //Updating DIalog TODO f lflfl
+        //Updating dialog(if operation takes too long)
         if (createScreenUIState.value.savingData) {
             Dialog(onDismissRequest = {//TODO
             }) {
@@ -131,21 +132,29 @@ fun CreateScreen(createScreenViewModel: CreateScreenViewModel = giveCreateScreen
         )
         Button(
             onClick = {
-                val generatedTaskCard = TaskCard(
-                    content = createScreenViewModel.taskContent.value!!,
-                    title = createScreenViewModel.taskTitle.value!!,
-                    time = createScreenViewModel.timeValue.value!!,
-                    cardColor = Utils.randomizeColor(colorsList = colorsList).toArgb()
-                )
-                createScreenViewModel.sendTaskCardToDB(generatedTaskCard)
+                if(createScreenViewModel.timeValue.value == "Set time" || createScreenViewModel.dateValue.value == "Set date"){
+                    Utils.showToast(context, "Please, set date and time")
+                }else {
+                    val generatedTaskCard = TaskCard(
+                        content = createScreenViewModel.taskContent.value!!,
+                        title = createScreenViewModel.taskTitle.value!!,
+                        time = createScreenViewModel.timeValue.value!!,
+                        cardColor = Utils.randomizeColor(colorsList = colorsList).toArgb(),
+                        dateInMillis = createScreenViewModel.dateInMillis.value ?: 0L
+                    )
+                    createScreenViewModel.sendTaskCardToDB(generatedTaskCard)
 
-//                val generatedScheduledTaskCardDate = TaskCardScheduledDate(
-//                    dateInMillis = createScreenViewModel.dateInMillis.value!!
-//                )
-//                createScreenViewModel.sendTaskCardScheduledDateToDB(generatedScheduledTaskCardDate)
-
-                 Utils.showToast(context, "Task successfully saved")
-            },
+                    createScreenViewModel.sendTaskCardScheduledDateToDB(
+                        TaskCardScheduledDate(
+                            createScreenViewModel.dateInMillis.value ?: 0L
+                        )
+                    )
+                    Log.i(
+                        "TImeINMILLLS",
+                        (createScreenViewModel.dateInMillis.value ?: 0L).toString()
+                    )
+                    Utils.showToast(context, "Task successfully saved")
+                }},
             shape = RoundedCornerShape(18.dp),
             modifier = Modifier
                 .weight(0.08f)
@@ -157,6 +166,7 @@ fun CreateScreen(createScreenViewModel: CreateScreenViewModel = giveCreateScreen
         }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)

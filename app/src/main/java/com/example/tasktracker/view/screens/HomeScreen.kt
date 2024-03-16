@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.data.repository.TasksRepositoryImpl
 import com.example.tasktracker.data.room.TaskTrackerDatabase
-import com.example.tasktracker.view.ui.viewmodel.HomeScreenViewModel
+import com.example.tasktracker.view.taskcards.TaskCardView
+import com.example.tasktracker.view.ui.viewmodel.viewmodels.HomeScreenViewModel
 import com.example.tasktracker.view.ui.viewmodel.factories.HomeScreenViewModelFactory
 
 
@@ -54,7 +55,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewMode
          LazyColumn() {
             items(homeScreenUIState.value.notDoneTasksList.size,) { index ->
                 val taskCard = homeScreenUIState.value.notDoneTasksList[index]
-                TaskCardScreen(
+                TaskCardView(
                     taskCard,
                     onClick = {
                         homeScreenViewModel.remove(
