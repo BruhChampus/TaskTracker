@@ -18,14 +18,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.data.repository.TasksRepositoryImpl
 import com.example.tasktracker.data.room.TaskTrackerDatabase
-import com.example.tasktracker.view.ui.viewmodel.HomeScreenViewModel
+import com.example.tasktracker.view.taskcards.TaskCardView
+import com.example.tasktracker.view.ui.viewmodel.viewmodels.HomeScreenViewModel
 import com.example.tasktracker.view.ui.viewmodel.factories.HomeScreenViewModelFactory
+import java.time.LocalDate
+import java.time.ZoneOffset
 
 
 @Composable
-fun giveHomeScreenViewModel(): HomeScreenViewModel {
+private fun giveHomeScreenViewModel(): HomeScreenViewModel {
     val dao =
         TaskTrackerDatabase.getDatabaseInstance(context = LocalContext.current.applicationContext)
             .taskCardsDao()
@@ -38,7 +42,7 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewMode
 
     val homeScreenUIState = homeScreenViewModel.uiState.collectAsState()
 
-    if (homeScreenUIState.value.tasksList.isEmpty()) {
+    if (homeScreenUIState.value.notDoneTasksList.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(
                 text = "No tasks yet. Please create some!",
@@ -52,19 +56,34 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewMode
             )
         }
     } else {
-         LazyColumn() {
-            items(homeScreenUIState.value.tasksList.size,) { index ->
-                val taskCard = homeScreenUIState.value.tasksList[index]
-                TaskCardScreen(
-                    taskCard,
-                    onClick = {
-                        homeScreenViewModel.remove(
-                            taskCard
-                        )
+        LazyColumn() {
+
+
+                val taskCardsList =
+                    homeScreenUIState.value.taskCardWithScheduledDateList.taskCardsList
+                val notDoneTaskCardsList = ArrayList<TaskCard>()
+                taskCardsList.forEachIndexed { _, taskCard ->
+                    if (!taskCard.isDone) {
+                        notDoneTaskCardsList.add(taskCard)
                     }
-                )
+                }
+                items(notDoneTaskCardsList.size) { index ->
+                    val taskCard = notDoneTaskCardsList[index]
+                    TaskCardView(
+                        taskCard,
+                        onClick = {
+                            homeScreenViewModel.removeFromScheduledTaskCard(
+                                taskCard
+                            )
+                            Log.i(
+                                "GHPGPSFPDSF",
+                                homeScreenUIState.value.taskCardWithScheduledDateList.toString()
+                            )
+
+                        }
+                    )
+                }
             }
-        }
     }
 
 

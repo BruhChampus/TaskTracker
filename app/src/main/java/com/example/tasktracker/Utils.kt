@@ -4,20 +4,12 @@ import android.content.Context
 import android.view.Gravity
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
+import com.example.tasktracker.data.model.TaskCard
 import kotlin.random.Random
 
 object Utils{
 
-    //Transforms time from m to mm representation
-    fun transformTime(time:String):String{
-        val regex = Regex("""(\d+)""")
-        val matchResult = regex.find(time)
-        var minute = ""
-        if (matchResult != null) {
-            minute = matchResult.groupValues[1].padStart(2, '0')
-        }
-        return minute
-    }
+
 
     fun showToast(context: Context, msg:String){
         val toast = Toast.makeText(

@@ -1,8 +1,8 @@
 package com.example.tasktracker.data.repository
 
-import androidx.room.Query
-import com.example.tasktracker.data.model.TaskCardWithScheduledDate
 import com.example.tasktracker.data.model.TaskCard
+import com.example.tasktracker.data.model.TaskCardScheduledDate
+import com.example.tasktracker.data.model.TaskCardWithScheduledDate
 import kotlinx.coroutines.flow.Flow
 
 interface TasksRepository{
@@ -16,5 +16,10 @@ interface TasksRepository{
 
     suspend fun deleteTaskCard(taskCard: TaskCard)
 
-      //fun getScheduledDateWithTaskCard(dateInMillis:Long):Flow<List<TaskCardWithScheduledDate>>
+    suspend fun insertTaskCardScheduledDate(taskCardScheduledDate: TaskCardScheduledDate)
+
+    fun getScheduledDateWithTaskCard(dateInMillis:Long):Flow<List<TaskCardWithScheduledDate>>
+
+    fun getAllScheduledDateWithTaskCards():Flow<List<TaskCardWithScheduledDate>>
+
 }

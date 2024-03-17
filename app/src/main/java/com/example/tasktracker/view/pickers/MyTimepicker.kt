@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.tasktracker.Utils
+import com.example.tasktracker.domain.MyTimeConverter
 
 
 //TODO datepicker можеш сделать что получаем только дату начала таска, и потом когда этото день настает присылать уведомление, мол на сегодня столько то тасков, ну и все
@@ -177,7 +178,7 @@ fun TwentyFourHoursPicker(
                     if (hoursState.value.toInt() >= 24 || minutesState.value.toInt() >= 60) {
                         Text(text = "Time must be in 24-hours format", color = Color.Red, modifier = Modifier.padding(8.dp))
                     } else {
-                        timeState.value = "${Utils.transformTime(hoursState.value)} : ${Utils.transformTime(minutesState.value)}"
+                        timeState.value = "${MyTimeConverter.transformTime(hoursState.value)} : ${MyTimeConverter.transformTime(minutesState.value)}"
                         confirmButton()
                     }
                 }
@@ -219,7 +220,7 @@ fun AmPmTimePicker(
 
     val minutes = ArrayList<String>()
     for (i in 0..59 step 5) {
-        minutes.add(Utils.transformTime(i.toString()))
+        minutes.add(MyTimeConverter.transformTime(i.toString()))
     }
 
     Dialog(
