@@ -1,8 +1,6 @@
 package com.example.tasktracker.view.screens
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +28,6 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun giveHomeScreenViewModel(): HomeScreenViewModel {
     val dao =
@@ -40,10 +36,9 @@ private fun giveHomeScreenViewModel(): HomeScreenViewModel {
     return viewModel(factory = HomeScreenViewModelFactory(TasksRepositoryImpl(dao))) as HomeScreenViewModel
 }
 
- @RequiresApi(Build.VERSION_CODES.O)
- @Composable
+@Preview(showSystemUi = true)
+@Composable
 fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewModel()) {//list<TaskCard>
-
 
     val homeScreenUIState = homeScreenViewModel.uiState.collectAsState()
 
