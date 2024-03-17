@@ -1,6 +1,8 @@
 package com.example.tasktracker.view.ui.viewmodel.viewmodels
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasktracker.data.model.TaskCard
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneOffset
 
+@RequiresApi(Build.VERSION_CODES.O)
 class HomeScreenViewModel(private val taskTrackerRepo: TasksRepositoryImpl) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeScreenUiState())
@@ -26,7 +29,6 @@ class HomeScreenViewModel(private val taskTrackerRepo: TasksRepositoryImpl) : Vi
     init {
         getAllNotDoneTaskCards()
 
-
             val currentDate =
                 LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
             getScheduledDateWithNotDoneTaskCards(currentDate)
@@ -34,7 +36,7 @@ class HomeScreenViewModel(private val taskTrackerRepo: TasksRepositoryImpl) : Vi
     }
 
     //TODO implement
-    private fun getAllNotDoneTaskCards() {
+      fun getAllNotDoneTaskCards() {
         viewModelScope.launch(Dispatchers.IO) {
             taskTrackerRepo.getAllNotDoneTaskCards().collect() { taskCardList ->
                 _uiState.update { currentState ->
@@ -57,7 +59,7 @@ class HomeScreenViewModel(private val taskTrackerRepo: TasksRepositoryImpl) : Vi
     //Can match to get todays NotDone TaskCards. To homeScreenViewmodel
     //        val currentDate = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
 //        getScheduledDateWithDoneTaskCards(currentDate)
-    private fun getScheduledDateWithNotDoneTaskCards(dateInMills: Long) {
+      fun getScheduledDateWithNotDoneTaskCards(dateInMills: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             taskTrackerRepo.getScheduledDateWithTaskCard(dateInMills)
                 .collect { taskCardsWithScheduledDate ->
