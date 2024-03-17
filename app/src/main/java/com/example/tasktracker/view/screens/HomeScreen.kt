@@ -24,6 +24,8 @@ import com.example.tasktracker.data.room.TaskTrackerDatabase
 import com.example.tasktracker.view.taskcards.TaskCardView
 import com.example.tasktracker.view.ui.viewmodel.viewmodels.HomeScreenViewModel
 import com.example.tasktracker.view.ui.viewmodel.factories.HomeScreenViewModelFactory
+import java.time.LocalDate
+import java.time.ZoneOffset
 
 
 @Composable
@@ -55,35 +57,33 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewMode
         }
     } else {
         LazyColumn() {
-            val taskCardsList = homeScreenUIState.value.taskCardWithScheduledDateList?.taskCardsList
-            val notDoneTaskCardsList = ArrayList<TaskCard>()
-            taskCardsList?.forEachIndexed { index, taskCard ->
-                if (!taskCard.isDone) {
-                    notDoneTaskCardsList.add(taskCard)
+
+
+                val taskCardsList =
+                    homeScreenUIState.value.taskCardWithScheduledDateList.taskCardsList
+                val notDoneTaskCardsList = ArrayList<TaskCard>()
+                taskCardsList.forEachIndexed { _, taskCard ->
+                    if (!taskCard.isDone) {
+                        notDoneTaskCardsList.add(taskCard)
+                    }
+                }
+                items(notDoneTaskCardsList.size) { index ->
+                    val taskCard = notDoneTaskCardsList[index]
+                    TaskCardView(
+                        taskCard,
+                        onClick = {
+                            homeScreenViewModel.removeFromScheduledTaskCard(
+                                taskCard
+                            )
+                            Log.i(
+                                "GHPGPSFPDSF",
+                                homeScreenUIState.value.taskCardWithScheduledDateList.toString()
+                            )
+
+                        }
+                    )
                 }
             }
-
-            items(notDoneTaskCardsList.size) { index ->
-                Log.i(
-                    "GHPGPSFPDSF",
-                    homeScreenUIState.value.taskCardWithScheduledDateList.toString()
-                )
-                val taskCard = notDoneTaskCardsList[index]
-                TaskCardView(
-                    taskCard,
-                    onClick = {
-                        homeScreenViewModel.removeFromScheduledTaskCard(
-                            taskCard
-                        )
-                        Log.i(
-                            "GHPGPSFPDSF",
-                            homeScreenUIState.value.taskCardWithScheduledDateList.toString()
-                        )
-
-                    }
-                )
-            }
-        }
     }
 
 
