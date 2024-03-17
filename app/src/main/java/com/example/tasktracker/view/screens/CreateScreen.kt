@@ -149,11 +149,8 @@ fun CreateScreen(createScreenViewModel: CreateScreenViewModel = giveCreateScreen
                             createScreenViewModel.dateInMillis.value ?: 0L
                         )
                     )
-                    Log.i(
-                        "TImeINMILLLS",
-                        (createScreenViewModel.dateInMillis.value ?: 0L).toString()
-                    )
                     Utils.showToast(context, "Task successfully saved")
+                    createScreenViewModel.clearAllFields()
                 }},
             shape = RoundedCornerShape(18.dp),
             modifier = Modifier

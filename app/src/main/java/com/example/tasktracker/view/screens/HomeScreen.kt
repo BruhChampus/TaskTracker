@@ -1,5 +1,6 @@
 package com.example.tasktracker.view.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.data.repository.TasksRepositoryImpl
 import com.example.tasktracker.data.room.TaskTrackerDatabase
 import com.example.tasktracker.view.taskcards.TaskCardView
@@ -52,15 +54,32 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewMode
             )
         }
     } else {
-         LazyColumn() {
-            items(homeScreenUIState.value.notDoneTasksList.size,) { index ->
-                val taskCard = homeScreenUIState.value.notDoneTasksList[index]
+        LazyColumn() {
+            val taskCardsList = homeScreenUIState.value.taskCardWithScheduledDateList?.taskCardsList
+            val notDoneTaskCardsList = ArrayList<TaskCard>()
+            taskCardsList?.forEachIndexed { index, taskCard ->
+                if (!taskCard.isDone) {
+                    notDoneTaskCardsList.add(taskCard)
+                }
+            }
+
+            items(notDoneTaskCardsList.size) { index ->
+                Log.i(
+                    "GHPGPSFPDSF",
+                    homeScreenUIState.value.taskCardWithScheduledDateList.toString()
+                )
+                val taskCard = notDoneTaskCardsList[index]
                 TaskCardView(
                     taskCard,
                     onClick = {
-                        homeScreenViewModel.remove(
+                        homeScreenViewModel.removeFromScheduledTaskCard(
                             taskCard
                         )
+                        Log.i(
+                            "GHPGPSFPDSF",
+                            homeScreenUIState.value.taskCardWithScheduledDateList.toString()
+                        )
+
                     }
                 )
             }

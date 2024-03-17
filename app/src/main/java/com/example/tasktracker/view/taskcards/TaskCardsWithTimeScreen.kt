@@ -14,15 +14,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.tasktracker.Utils
 import com.example.tasktracker.data.model.TaskCardWithScheduledDate
-
-
+import com.example.tasktracker.domain.MyTimeConverter
+import com.example.tasktracker.domain.TaskCardsSorter
 
 
 @Composable
 fun TaskCardsWithTime(list: Set<TaskCardWithScheduledDate>) {
     LazyColumn {
         list.forEachIndexed { index, taskCardWithScheduledDate ->
-            val doneTaskCardsList = Utils.getAllDoneTaskCards(taskCardWithScheduledDate.taskCardsList)
+            val doneTaskCardsList = TaskCardsSorter().getAllDoneTaskCardsFromList(taskCardWithScheduledDate.taskCardsList)
             if (doneTaskCardsList.isNotEmpty()) {
                 item {
                     Column {
@@ -35,7 +35,7 @@ fun TaskCardsWithTime(list: Set<TaskCardWithScheduledDate>) {
                                     .align(Alignment.CenterVertically)
                             )
                             Text(
-                                text = Utils.transformMillisToDate(taskCardWithScheduledDate.taskCardScheduledDate.dateInMillis),
+                                text = MyTimeConverter.transformMillisToDate(taskCardWithScheduledDate.taskCardScheduledDate.dateInMillis),
                                 color = Color.Gray,
                                 modifier = Modifier
                                     .fillMaxWidth()

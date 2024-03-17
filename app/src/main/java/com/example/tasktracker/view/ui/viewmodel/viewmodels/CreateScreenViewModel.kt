@@ -80,6 +80,14 @@ class CreateScreenViewModel(private val taskTrackerRepo:TasksRepositoryImpl) : V
     }
 
 
+    fun clearAllFields(){
+        _taskTitle.value = ""
+        _taskContent.value = ""
+        _timeValue.value = "Set time"
+        _dateValue.value = "Set date"
+        _dateInMillis.value = 0L
+        _isWrongDate.value = false
+    }
 
 
     @OptIn(ExperimentalMaterial3Api::class)
