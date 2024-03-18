@@ -5,8 +5,8 @@ import com.example.tasktracker.data.model.TaskCard
 class TaskCardsSorter {
     /**
     Get task cards with isDone = true and return ArrayList.
-    The reason why this method created is because of Query that gets all task cards with isDone = true doesnt work,
-    the reason is TaskCardWithScheduledDate class.
+    Main reason why this method created is because of Query that gets all task cards with isDone = true doesn`t work as needed,
+    problem is TaskCardWithScheduledDate class gets all taskCard with corresponding date even where isDone = false.
      */
     fun getAllDoneTaskCardsFromList(taskCardsList: List<TaskCard>): ArrayList<TaskCard> {
         val doneTasks = ArrayList<TaskCard>()

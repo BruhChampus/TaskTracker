@@ -1,6 +1,5 @@
 package com.example.tasktracker.view.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -53,11 +52,9 @@ private fun giveCreateScreenViewModel(): CreateScreenViewModel {
     return viewModel(factory = CreateScreenViewModelFactory(TasksRepositoryImpl(dao))) as CreateScreenViewModel
 }
 
-//TODO каким то образом происходдят вызовы в вьюмодель HomeScreen
 @Composable
 fun CreateScreen(createScreenViewModel: CreateScreenViewModel = giveCreateScreenViewModel()) {
     val createScreenUIState = createScreenViewModel.uiState.collectAsState()
-
 
     val taskTitleState = createScreenViewModel.taskTitle.observeAsState()
 
@@ -72,7 +69,7 @@ fun CreateScreen(createScreenViewModel: CreateScreenViewModel = giveCreateScreen
 
         //Updating dialog(if operation takes too long)
         if (createScreenUIState.value.savingData) {
-            Dialog(onDismissRequest = {//TODO
+            Dialog(onDismissRequest = {
             }) {
                 Column(modifier = Modifier
                     .size(100.dp)
@@ -169,8 +166,8 @@ fun CreateScreen(createScreenViewModel: CreateScreenViewModel = giveCreateScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColumnScope.DatePickerView(createScreenViewModel: CreateScreenViewModel = giveCreateScreenViewModel()) {
-    val dateTextState = createScreenViewModel.dateValue.observeAsState()
 
+    val dateTextState = createScreenViewModel.dateValue.observeAsState()
 
     val showDatePicker = remember { mutableStateOf(false) }
 
@@ -179,8 +176,7 @@ fun ColumnScope.DatePickerView(createScreenViewModel: CreateScreenViewModel = gi
     val context = LocalContext.current
 
 
-    //Date picker
-    Button(
+     Button(
         onClick = { showDatePicker.value = true },
         shape = RoundedCornerShape(18.dp),
         colors = ButtonDefaults.buttonColors(
@@ -237,7 +233,7 @@ fun ColumnScope.DatePickerView(createScreenViewModel: CreateScreenViewModel = gi
 }
 
 @Composable
-fun ColumnScope.TimePickerView(createScreenViewmodel: CreateScreenViewModel = giveCreateScreenViewModel()) {
+fun ColumnScope.TimePickerView(createScreenViewModel: CreateScreenViewModel = giveCreateScreenViewModel()) {
 
     val showTimePicker = remember { mutableStateOf(false) }
 
@@ -245,7 +241,7 @@ fun ColumnScope.TimePickerView(createScreenViewmodel: CreateScreenViewModel = gi
         mutableStateOf("-")
     }
 
-    val timeText = createScreenViewmodel.timeValue.observeAsState()
+    val timeText = createScreenViewModel.timeValue.observeAsState()
 
     //Time picker
     Button(
@@ -283,7 +279,7 @@ fun ColumnScope.TimePickerView(createScreenViewmodel: CreateScreenViewModel = gi
                 timeState = timeState,
                 is24Hours = false
             )
-            createScreenViewmodel.updateTimeValue(timeState.value)
+            createScreenViewModel.updateTimeValue(timeState.value)
         }
     }
 }

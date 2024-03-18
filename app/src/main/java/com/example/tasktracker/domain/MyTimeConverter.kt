@@ -15,6 +15,7 @@ object MyTimeConverter {
         return minute
     }
 
+    //Millis to something like 24 july 2024
     fun transformMillisToDate(timeInMillis:Long): String {
         val dateFormatter =
             SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())

@@ -22,6 +22,7 @@ import com.example.tasktracker.domain.TaskCardsSorter
 fun TaskCardsWithTime(list: Set<TaskCardWithScheduledDate>) {
     LazyColumn {
         list.forEachIndexed { index, taskCardWithScheduledDate ->
+            //Getting all taskCards with isDone = true
             val doneTaskCardsList = TaskCardsSorter().getAllDoneTaskCardsFromList(taskCardWithScheduledDate.taskCardsList)
             if (doneTaskCardsList.isNotEmpty()) {
                 item {
@@ -52,7 +53,6 @@ fun TaskCardsWithTime(list: Set<TaskCardWithScheduledDate>) {
                         }
                     }
                 }
-
                 items(doneTaskCardsList.size) {
                     TaskCardItem(
                         taskCard = doneTaskCardsList[it],

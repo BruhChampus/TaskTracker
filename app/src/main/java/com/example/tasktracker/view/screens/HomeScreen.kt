@@ -1,6 +1,8 @@
 package com.example.tasktracker.view.screens
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tasktracker.data.model.TaskCard
 import com.example.tasktracker.data.repository.TasksRepositoryImpl
 import com.example.tasktracker.data.room.TaskTrackerDatabase
+import com.example.tasktracker.domain.TaskCardsSorter
 import com.example.tasktracker.view.taskcards.TaskCardView
 import com.example.tasktracker.view.ui.viewmodel.viewmodels.HomeScreenViewModel
 import com.example.tasktracker.view.ui.viewmodel.factories.HomeScreenViewModelFactory
@@ -28,6 +31,7 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun giveHomeScreenViewModel(): HomeScreenViewModel {
     val dao =
@@ -36,9 +40,9 @@ private fun giveHomeScreenViewModel(): HomeScreenViewModel {
     return viewModel(factory = HomeScreenViewModelFactory(TasksRepositoryImpl(dao))) as HomeScreenViewModel
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewModel()) {//list<TaskCard>
+ @RequiresApi(Build.VERSION_CODES.O)
+ @Composable
+fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewModel()) {
 
     val homeScreenUIState = homeScreenViewModel.uiState.collectAsState()
 
@@ -57,16 +61,9 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewMode
         }
     } else {
         LazyColumn() {
-
-
                 val taskCardsList =
-                    homeScreenUIState.value.taskCardWithScheduledDateList.taskCardsList
-                val notDoneTaskCardsList = ArrayList<TaskCard>()
-                taskCardsList.forEachIndexed { _, taskCard ->
-                    if (!taskCard.isDone) {
-                        notDoneTaskCardsList.add(taskCard)
-                    }
-                }
+                    homeScreenUIState.value.taskCardWithScheduledDateList.taskCardsList //This list contains all taskCards which corresponds to current date
+                val notDoneTaskCardsList = TaskCardsSorter().getAllNotDoneTaskCardsFromList(taskCardsList) //Get all taskCards with isDone = false
                 items(notDoneTaskCardsList.size) { index ->
                     val taskCard = notDoneTaskCardsList[index]
                     TaskCardView(
@@ -75,16 +72,10 @@ fun HomeScreen(homeScreenViewModel: HomeScreenViewModel = giveHomeScreenViewMode
                             homeScreenViewModel.removeFromScheduledTaskCard(
                                 taskCard
                             )
-                            Log.i(
-                                "GHPGPSFPDSF",
-                                homeScreenUIState.value.taskCardWithScheduledDateList.toString()
-                            )
 
                         }
                     )
                 }
             }
     }
-
-
 }

@@ -51,11 +51,8 @@ fun DoneScreen(doneScreenViewModel: DoneScreenViewModel = giveDoneScreenViewMode
             )
         }
     } else {
-        //TODO think about how can I implement that list
-        val list = homeScreenUIState.value.taskCardWithScheduledDateList.toSet()
+         val list = homeScreenUIState.value.taskCardWithScheduledDateList.toSet()
         TaskCardsWithTime(list)
-
-
     }
 }
 
