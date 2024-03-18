@@ -9,8 +9,6 @@ import kotlin.random.Random
 
 object Utils{
 
-
-
     fun showToast(context: Context, msg:String){
         val toast = Toast.makeText(
             context,

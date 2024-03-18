@@ -51,6 +51,8 @@ class CreateScreenViewModel(private val taskTrackerRepo:TasksRepositoryImpl) : V
     val uiState:StateFlow<CreateScreenUIState>
         get() = _uiState.asStateFlow()
 
+
+
     fun updateTaskTitle(title: String) {
         _taskTitle.value = title
     }
@@ -105,6 +107,7 @@ class CreateScreenViewModel(private val taskTrackerRepo:TasksRepositoryImpl) : V
         val dateFormatter =
             SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
+        //Validating date
         if (selectedDate.before(yesterdayDate)) {
             _isWrongDate.value = true
         } else {

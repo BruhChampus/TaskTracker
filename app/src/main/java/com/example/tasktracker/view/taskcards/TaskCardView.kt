@@ -44,7 +44,6 @@ fun TaskCardView(taskCard: TaskCard, onClick:()-> Unit) {
 
 @Composable
 fun TaskCardItem(taskCard: TaskCard, showTimeInCard: Boolean = false, onCLick:()-> Unit) {
-
     Row {
         Icon(
             imageVector =
@@ -97,6 +96,7 @@ fun TaskCardItem(taskCard: TaskCard, showTimeInCard: Boolean = false, onCLick:()
                     fontSize = 13.sp
                 )
 
+                //Checks if need to show taskCard time below
                 if (showTimeInCard) {
                     Text(
                         text = taskCard.time,

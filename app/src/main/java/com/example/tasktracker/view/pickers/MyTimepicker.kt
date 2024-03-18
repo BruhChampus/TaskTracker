@@ -40,8 +40,7 @@ import com.example.tasktracker.Utils
 import com.example.tasktracker.domain.MyTimeConverter
 
 
-//TODO datepicker можеш сделать что получаем только дату начала таска, и потом когда этото день настает присылать уведомление, мол на сегодня столько то тасков, ну и все
- @Composable
+  @Composable
 fun MyTimePicker(
     title: String = "Select Time",
     onDismissRequest: () -> Unit,

@@ -1,8 +1,10 @@
 package com.example.tasktracker
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +27,7 @@ import com.example.tasktracker.view.bottomnavigat.BottomNavBarItem
 import com.example.tasktracker.view.bottomnavigat.itemsList
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -41,6 +44,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true)
 @Composable
 fun TaskTrackerPreview() {
@@ -49,6 +53,7 @@ fun TaskTrackerPreview() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TaskTrackerMainScreen(){
     val navController = rememberNavController()
@@ -66,6 +71,7 @@ fun TaskTrackerMainScreen(){
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = BottomNavBarItem.Home.route) {
